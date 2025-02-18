@@ -379,13 +379,7 @@ void FTexture::setImage(FEngine& engine, size_t const level,
             << ") > texture depth (" << effectiveTextureDepthOrLayers << ") at level ("
             << unsigned(level) << ")";
 
-    using PBD = PixelBufferDescriptor;
-    size_t const stride = p.stride ? p.stride : width;
-    size_t const bpp = PBD::computeDataSize(p.format, p.type, 1, 1, 1);
-    size_t const bpr = PBD::computeDataSize(p.format, p.type, stride, 1, p.alignment);
-    size_t const bpl = bpr * height; // TODO: PBD should have a "layer stride"
-    // TODO: PBD should have a p.depth (# layers to skip)
-    FILAMENT_CHECK_PRECONDITION(bpp * p.left + bpr * p.top + bpl * (0 + depth) <= p.size)
+    FILAMENT_CHECK_PRECONDITION(validatePixelBufferSize(p, width, height, depth))
             << "buffer overflow: (size=" << size_t(p.size) << ", stride=" << size_t(p.stride)
             << ", left=" << unsigned(p.left) << ", top=" << unsigned(p.top)
             << ") smaller than specified region "
@@ -673,6 +667,17 @@ bool FTexture::isTextureSwizzleSupported(FEngine& engine) noexcept {
 size_t FTexture::computeTextureDataSize(Format const format, Type const type,
         size_t const stride, size_t const height, size_t const alignment) noexcept {
     return PixelBufferDescriptor::computeDataSize(format, type, stride, height, alignment);
+}
+
+bool FTexture::validatePixelBufferSize(const PixelBufferDescriptor& p,
+        size_t const width, size_t const height, size_t const depth) noexcept {
+    using PBD = PixelBufferDescriptor;
+    size_t const stride = p.stride ? p.stride : width;
+    size_t const bpp = PBD::computeDataSize(p.format, p.type, 1, 1, 1);
+    size_t const bpr = PBD::computeDataSize(p.format, p.type, stride, 1, p.alignment);
+    size_t const bpl = bpr * height; // TODO: PBD should have a "layer stride"
+    // TODO: PBD should have a p.depth (# layers to skip)
+    return bpp * p.left + bpr * p.top + bpl * (0 + depth) <= p.size;
 }
 
 size_t FTexture::getFormatSize(InternalFormat const format) noexcept {

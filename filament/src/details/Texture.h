@@ -102,6 +102,9 @@ public:
     static size_t computeTextureDataSize(Format format, Type type,
             size_t stride, size_t height, size_t alignment) noexcept;
 
+    static bool validatePixelBufferSize(const PixelBufferDescriptor& descriptor,
+            size_t width, size_t height, size_t depth) noexcept;
+
     // Size a of a pixel in bytes for the given format
     static size_t getFormatSize(InternalFormat format) noexcept;
 
