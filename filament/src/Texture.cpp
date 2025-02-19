@@ -108,4 +108,9 @@ bool Texture::validatePixelFormatAndType(InternalFormat internalFormat, Format f
     return FTexture::validatePixelFormatAndType(internalFormat, format, type);
 }
 
+bool Texture::validatePixelBufferSize(const PixelBufferDescriptor& descriptor, size_t width,
+        size_t height, size_t depth) noexcept {
+    return FTexture::validatePixelBufferSize(descriptor, width, height, depth);
+}
+
 } // namespace filament

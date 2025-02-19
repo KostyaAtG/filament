@@ -106,6 +106,10 @@ public:
     /** @return Whether a combination of texture format, pixel format and type is valid. */
     static bool validatePixelFormatAndType(InternalFormat internalFormat, Format format, Type type) noexcept;
 
+    /** @return Whether a pixel buffer size is valid for specified dimensions. */
+    static bool validatePixelBufferSize(const PixelBufferDescriptor& descriptor,
+        size_t width, size_t height, size_t depth) noexcept;
+    
     /**
      * Options for environment prefiltering into reflection map
      *
