@@ -1455,6 +1455,10 @@ class_<Texture>("Texture")
     .class_function("Builder", (TexBuilder (*)()) [] { return TexBuilder(); })
     .class_function("isTextureFormatMipmappable", &Texture::isTextureFormatMipmappable)
     .class_function("validatePixelFormatAndType", &Texture::validatePixelFormatAndType)
+    .class_function("validatePixelBufferSize", EMBIND_LAMBDA(bool, (PixelBufferDescriptor pbd,
+            size_t width, size_t height, size_t depth), {
+        return Texture::validatePixelBufferSize(*pbd.pbd, width, height, depth);
+    }))
     .function("generateMipmaps", &Texture::generateMipmaps)
     .function("_setImage", EMBIND_LAMBDA(void, (Texture* self,
             Engine* engine, uint8_t level, PixelBufferDescriptor pbd), {
